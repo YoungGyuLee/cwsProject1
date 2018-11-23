@@ -32,6 +32,9 @@ var message = function(topic, message){
     
     var adjust;
     var temp = {out : 0, in : 0};
+
+    var alarm = {who : msg.who, weight : "none", heart : "fine"};
+    var heart_state = ""
     if (msg.type == "sensor:temperature") {
         //클라이언트가 입려한 이름이 msg.who
         if(msg.detail.out == "out:low"){
@@ -54,6 +57,16 @@ var message = function(topic, message){
     
         console.log('여기까지 옴');
         mqtt.client.publish('cloth', JSON.stringify(adjust));
+    }
+
+    if(msg.type == "sensor:weight"){
+        var weight_state = ""        
+        if(msg.detail == "none"){
+            alarm.weight = "none."
+        }else{
+            alarm.weight = "something in."
+        }
+        mqtt.client.publish('mobile', JSON.stringify(alarm));        
     }
 }
 
