@@ -16,7 +16,6 @@ var mqtt = {
     connected: false
 };
 
-
 mqtt.client = mqtt_module.connect(mqtt.url);
 
 
@@ -24,20 +23,22 @@ mqtt.client = mqtt_module.connect(mqtt.url);
 var sensor = {
     emitter: new events.EventEmitter(),
     who: null,
-    weight: 0
+    heart: 0
 };
 
 var checkWeight = function(){
     
         mqtt.connected = true;
-        console.log('주머니 속 물건 무게를 측정합니다.')
+        console.log('심박수를 측정합니다.');
     
         sensor.who = readlineSync.question('착용자 : ');
-        sensor.weight = readlineSync.question('주머니 무게 : ');
+        sensor.heart = readlineSync.question('현재 심박수 : ');
     
-        sensor.emitter.emit('weight');
+        sensor.emitter.emit('heart');
     
 };
+
+var state = "fine";
 
 
 mqtt.client.on('connect', checkWeight);
@@ -46,26 +47,23 @@ var checkEvent = function(){
 
     if(sensor.who!=null){
         var msg;
-        var state;
-        
         //여기서 0,30은 device 저장값에 따라 달라질 것
+        console.log(sensor.heart);
         
-        
-        if(sensor.weight <= info.seosor_bound[sensor.who].weight){
-            state = "none";
+        if(sensor.heart <= (info.seosor_bound[sensor.who].heart*2/3) ){
+            state = "low";
             //누구의 옷에서 감지된 것인지도 보내야 함.
-        }else{
-            state = "something in";   
+        }else if(sensor.heart >= (info.seosor_bound[sensor.who].heart*3/2)){ 
+            state = "high";       
         }
-     
-         
-        msg = {type : "sensor:weight", detail : state, who : sensor.who}    
-        console.log('주머니 속 무게 감지');    
+      
+        msg = {type : "sensor:heart", detail : state, who : sensor.who}    
+        console.log('심박수 감지');    
         mqtt.client.publish('sensor', JSON.stringify(msg));
     }
 
 };
 
 
-sensor.emitter.on('weight', checkEvent)
+sensor.emitter.on('heart', checkEvent)
 

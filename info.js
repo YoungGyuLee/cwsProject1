@@ -44,19 +44,19 @@ var state_board = {
         heat : 22,
         humidity : 50,
         heart : "fine",
-        weight : 0
+        weight : "none"
     },
     "문정준":{
         heat : 26,
         humidity : 60,
         heart : "fine",
-        weight : 0
+        weight : "none"
     },
     "장용범":{
         heat : 23,
         humidity : 55,
         heart : "fine",
-        weight : 1
+        weight : "none"
     }
 };
 

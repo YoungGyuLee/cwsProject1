@@ -7,10 +7,12 @@ const beautify = require('json-beautify');
 
 const info = require('./info.js');
 
+const mqtt_url = require('./mqtt_url.js');
+
 var mqtt = {
-    url : "",
-    client : null,
-    connected : false
+    url: mqtt_url.url,
+    client: null,
+    connected: false
 };
 
 mqtt.client = mqtt_module.connect(mqtt.url);
@@ -25,15 +27,17 @@ var sensor = {
 };
 
 var checkTemp = function(){
-    mqtt.connected = true;
-    console.log('온도, 습도를 측정합니다.')
-
-    sensor.who = readlineSync.question('착용자 : ');
-    sensor.temp.out = readlineSync.question('외부 온도 : ');
-    sensor.temp.in = readlineSync.question('내부 온도 : ');
-    sensor.humidity = readlineSync.question('습도 : ');
-
-    sensor.emitter.emit('temphu');
+    
+        mqtt.connected = true;
+        console.log('온도, 습도를 측정합니다.')
+    
+        sensor.who = readlineSync.question('착용자 : ');
+        sensor.temp.out = readlineSync.question('외부 온도 : ');
+        sensor.temp.in = readlineSync.question('내부 온도 : ');
+        sensor.humidity = readlineSync.question('습도 : ');
+    
+        sensor.emitter.emit('temphu');
+    
 };
 
 mqtt.client.on('connect', checkTemp);
@@ -60,11 +64,13 @@ var checkEvent = function(){
     
         if(sensor.humidity > info.seosor_bound[sensor.who].humidity){
             state.humidity = "humidity:high"
+        }else if(sensor.humidity < info.seosor_bound[sensor.who].humidity){
+            state.humidity = "humidity:low"            
         }
     
     
         msg = {type : "sensor:temperature", detail : state, who : sensor.who}    
-        console.log('여기까지 옴');    
+        console.log('온도 이상값 발견');    
         mqtt.client.publish('sensor', JSON.stringify(msg));
     }
 

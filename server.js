@@ -7,14 +7,16 @@ const beautify = require('json-beautify');
 
 const event_detector = new events.EventEmitter();
 
+const mqtt_url = require('./mqtt_url.js');
 
 var mqtt = {
-    url: "",
+    url: mqtt_url.url,
     client: null,
     connected: false
 };
 
 mqtt.client = mqtt_module.connect(mqtt.url);
+
 
 
 var connect = function(){
@@ -32,9 +34,10 @@ var message = function(topic, message){
     
     var adjust;
     var temp = {out : 0, in : 0};
-
-    var alarm = {who : msg.who, weight : "none", heart : "fine"};
-    var heart_state = ""
+    var humidity = 0;
+    var alarm;
+   
+    
     if (msg.type == "sensor:temperature") {
         //클라이언트가 입려한 이름이 msg.who
         if(msg.detail.out == "out:low"){
@@ -50,22 +53,26 @@ var message = function(topic, message){
         }
 
         if(msg.detail.humidity == "humidity:high"){
-            //습도가 높으면 어케 하지 근데..
+            humidity = -3;
+        }else if(msg.detail.humidity == "humidity:low"){
+            humidity = 3;
         }
 
-        adjust = {who : msg.who, temp_out : temp.out, temp_in : temp.in};            
+        adjust = {who : msg.who, type : "temp", temp_out : temp.out, temp_in : temp.in, humidity : humidity};            
     
-        console.log('여기까지 옴');
+        console.log('온습도 조절');
         mqtt.client.publish('cloth', JSON.stringify(adjust));
     }
 
     if(msg.type == "sensor:weight"){
-        var weight_state = ""        
-        if(msg.detail == "none"){
-            alarm.weight = "none."
-        }else{
-            alarm.weight = "something in."
-        }
+        alarm = {who : msg.who, type : "weight" , detail : msg.detail}
+        console.log('무게 감지');        
+        mqtt.client.publish('mobile', JSON.stringify(alarm));        
+    }
+
+    if(msg.type == "sensor:heart"){
+        console.log('심박수 감지');
+        alarm = {who : msg.who, type : "heart" , detail : msg.detail}
         mqtt.client.publish('mobile', JSON.stringify(alarm));        
     }
 }
