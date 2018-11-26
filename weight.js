@@ -28,7 +28,7 @@ var sensor = {
 };
 
 var checkWeight = function(){
-    
+    setInterval(function(){
         mqtt.connected = true;
         console.log('주머니 속 물건 무게를 측정합니다.')
     
@@ -36,7 +36,7 @@ var checkWeight = function(){
         sensor.weight = readlineSync.question('주머니 무게 : ');
     
         sensor.emitter.emit('weight');
-    
+    })
 };
 
 

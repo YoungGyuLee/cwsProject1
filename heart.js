@@ -27,7 +27,7 @@ var sensor = {
 };
 
 var checkWeight = function(){
-    
+    setInterval(function(){
         mqtt.connected = true;
         console.log('심박수를 측정합니다.');
     
@@ -35,7 +35,7 @@ var checkWeight = function(){
         sensor.heart = readlineSync.question('현재 심박수 : ');
     
         sensor.emitter.emit('heart');
-    
+    })
 };
 
 var state = "fine";

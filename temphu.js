@@ -27,7 +27,7 @@ var sensor = {
 };
 
 var checkTemp = function(){
-    
+    setInterval(function(){
         mqtt.connected = true;
         console.log('온도, 습도를 측정합니다.')
     
@@ -37,7 +37,7 @@ var checkTemp = function(){
         sensor.humidity = readlineSync.question('습도 : ');
     
         sensor.emitter.emit('temphu');
-    
+    })
 };
 
 mqtt.client.on('connect', checkTemp);

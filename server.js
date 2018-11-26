@@ -105,16 +105,16 @@ server.on('request', function (req, res) {
     console.log(beautify(pretty_req, null, 2, 100));
 
     var url_request = url.parse(req.url, true, false);
-    if(url_request.query.request == "dashboard") {
-        res.setHeader('Content-Type', 'application/text');
-        res.setHeader('Content-Language', 'ko-KR');
-        res.writeHead(200);
-        res.write(JSON.stringify(human_device.dashboard));
-        res.end();
-    } else if(url_request.query.request == "notify") {
-        var msg2 = { "type": "dashboard:notify", "dashboard" : human_device.dashboard };  
-        mqtt.client.publish(url_request.query.id, JSON.stringify(msg2));
-    }
+    // if(url_request.query.request == "dashboard") {
+    //     res.setHeader('Content-Type', 'application/text');
+    //     res.setHeader('Content-Language', 'ko-KR');
+    //     res.writeHead(200);
+    //     res.write(JSON.stringify(human_device.dashboard));
+    //     res.end();
+    // } else if(url_request.query.request == "notify") {
+    //     var msg2 = { "type": "dashboard:notify", "dashboard" : human_device.dashboard };  
+    //     mqtt.client.publish(url_request.query.id, JSON.stringify(msg2));
+    // }
 });
 server.listen(9000);
 console.log('HTTP server is running !!!');
