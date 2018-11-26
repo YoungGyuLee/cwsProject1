@@ -21,7 +21,7 @@ mqtt.client = mqtt_module.connect(mqtt.url);
 
 var connect = function(){
     mqtt.connected = true;
-    console.log('Now, we are talking to the mqtt server !');
+    console.log('mqtt 서버 작동 중!');
     mqtt.client.subscribe('sensor');
 }
 
@@ -83,14 +83,7 @@ mqtt.client.on('message', message);
 
 
 
-
-
-
-
-//////////////////////////////////////
-// http
-//////////////////////////////////////
-// monitoring request from a web browser or a client
+//아래는 http
 var server = http.createServer();
 
 server.on('request', function (req, res) {
@@ -117,5 +110,5 @@ server.on('request', function (req, res) {
     // }
 });
 server.listen(9000);
-console.log('HTTP server is running !!!');
+console.log('HTTP 서버 작동 중');
 
