@@ -22,7 +22,7 @@ const info = require('./info.js');
 
 var connect = function(){
     mqtt.connected = true;
-    console.log('mqtt 서버 작동 중!');
+    console.log('mqtt 서버 작동 중');
     mqtt.client.subscribe('sensor');
 }
 
@@ -31,7 +31,6 @@ mqtt.client.on('connect', connect);
 var message = function(topic, message){
     var msg = JSON.parse(message.toString());
     //subscribe해서 넘어온 message를 분해하는 곳.
-    console.log('여기는 옴');
     
     var adjust;
     var temp = {out : 0, in : 0};

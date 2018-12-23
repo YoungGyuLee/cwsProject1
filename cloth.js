@@ -19,11 +19,12 @@ mqtt.client = mqtt_module.connect(mqtt.url);
 const info = require('./info.js');
 
 var connect = function(){
+  
     mqtt.connected = true;
     console.log('센서로부터 측정된 값으로 이벤트를 받습니다.')
 
     mqtt.client.subscribe('cloth');
-    
+ 
 }
 
 mqtt.client.on('connect', connect);
